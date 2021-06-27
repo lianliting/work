@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.admin.DormitoryRepairDao">
+	<!-- 记录宿舍报修信息 -->
+	<insert id="add" parameterType="com.ischoolbar.programmer.entity.admin.DormitoryRepair">
+		insert into dormitoryRepair(id,dorms,numbers,contents,adminId,time) values(null,#{dorms},#{numbers},#{contents},#{adminId},#{time})
+	</insert>
+	
+	<!-- 学生列表 -->
+	<select id="dormitoryRepairlist" parameterType="Map" resultType="DormitoryRepair">
+		select * from dormitoryRepair where 1 = 1 
+		<if test="dorms != null">
+			and dorms = #{dorms} 
+		</if>
+		<if test="numbers != null">
+			and numbers like '%${numbers}%' 
+		</if>
+		<if test="adminId != null">
+			and adminId like '%${adminId}%' 
+		</if>
+		<if test="contents != null">
+			and contents like '%${contents}%' 
+		</if>
+		<if test="startTime != null">
+			and time &gt; #{startTime}    
+		</if>
+		<if test="endTime != null">
+			and time &lt; #{endTime}   
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 宿舍报修记录获取 -->
+	<select id="findList" parameterType="Map" resultType="com.ischoolbar.programmer.entity.admin.DormitoryRepair">
+		select * from dormitoryRepair where 1 = 1 
+		<if test="dorms != null">
+			and dorms = #{dorms} 
+		</if>
+		<if test="numbers != null">
+			and numbers like '%${numbers}%' 
+		</if>
+		<if test="adminId != null">
+			and adminId like '%${adminId}%' 
+		</if>
+		<if test="contents != null">
+			and contents like '%${contents}%' 
+		</if>
+		<if test="startTime != null">
+			and time &gt; #{startTime}    
+		</if>
+		<if test="endTime != null">
+			and time &lt; #{endTime}   
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from dormitoryRepair 
+    		<if test="numbers != null">
+			where numbers like '%${numbers}%'
+		</if> 
+	</select>
+	
+	<!-- 删除外来人员记录信息 -->
+	<delete id="delete" parameterType="String">
+		delete from dormitoryRepair where id in(${value})
+	</delete>
+	
+</mapper>

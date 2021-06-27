@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.dao.admin.AdminDao">
+	<!-- 根据管理员名查找管理员 -->
+	<select id="findByAdminName" parameterType="String" resultType="Admin">
+		select * from admin where adminName = #{adminName}
+	</select>
+	
+	<!-- 根据管理员工号查管理员 -->
+	<select id="findByAdminNumber" parameterType="String" resultType="Admin">
+		select * from admin where adminNumber = #{adminNumber}
+	</select>
+	
+	<!-- 根据管理员工号查管理员所属寝室 -->
+	<select id="findDormsId" parameterType="Integer" resultType="Integer">
+		select dormsId from admin where id = #{adminId}
+	</select>
+	
+	<!-- 管理员列表 -->
+	<select id="adminlist" parameterType="Map" resultType="Admin">
+		select * from admin where 1=1 
+		<if test="dormsId != null">
+			and dormsId = #{dormsId}  
+		</if>
+		<if test="adminName != null">
+			and adminName like '%${adminName}%' 
+		</if>
+		<if test="sex != null">
+			and sex = #{sex}  
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 管理员列表 -->
+	<select id="dorms" parameterType="Map" resultType="Admin">
+		select * from admin where 1=1 
+	</select>
+	
+	<!-- 添加管理员 -->
+	<insert id="add" parameterType="Admin">
+		insert into admin(id,adminNumber,adminName,password,photo,sex,dormsId,dorms,tel) values(null,#{adminNumber},#{adminName},#{password},#{photo},#{sex},#{dormsId},#{dorms},#{tel})
+	</insert>
+	
+	<!-- 修改管理员 -->
+	<update id="edit" parameterType="Admin">
+		update admin set adminNumber = #{adminNumber},adminName = #{adminName},photo = #{photo},sex = #{sex},dormsId = #{dormsId},dorms = #{dorms},tel = #{tel} where id = #{id}
+	</update>
+	
+	<!-- 修改管理员密码 -->
+	<update id="editPassword" parameterType="Admin">
+		update admin set password = #{password} where id = #{id}
+	</update>
+	
+	<!-- 删除管理员 -->
+	<delete id="delete" parameterType="String">
+		delete from admin where id in(${value})
+	</delete>
+	
+	<!-- 分页获管理员列表 -->
+	<select id="findList" parameterType="Map" resultType="Admin">
+		select * from admin where 1 = 1 
+		<if test="adminName != null">
+			and adminName like '%${adminName}%' 
+		</if>
+		<if test="dormsId != null">
+			and dormsId = #{dormsId}  
+		</if>
+		<if test="sex != null">
+			and sex = #{sex}  
+		</if>
+
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 获取符合结果的总记录数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from admin where 1 = 1 
+		<if test="adminName != null">
+			and adminName like '%${adminName}%' 
+		</if>
+		<if test="dormsId != null">
+			and dormsId = #{dormsId}  
+		</if>
+		<if test="sex != null">
+			and sex = #{sex}  
+		</if>
+	</select>
+</mapper>
